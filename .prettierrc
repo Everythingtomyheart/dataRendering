@@ -1,0 +1,18 @@
+{
+  "singleQuote": true,
+  "trailingComma": "none",
+  "eslintIntegration": true,
+  "printWidth": 100,
+  "proseWrap": "never",
+  "endOfLine": "lf",
+  "semi": true,
+  "jsxSingleQuote": true,
+  "overrides": [
+    {
+      "files": ".prettierrc",
+      "options": {
+        "parser": "json"
+      }
+    }
+  ]
+}
