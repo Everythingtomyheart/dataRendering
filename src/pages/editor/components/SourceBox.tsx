@@ -41,6 +41,7 @@ const SourceBox = memo((props: SourceBoxProps) => {
       type: item.type,
       config: schema[item.type as keyof typeof schema].config,
       h: item.h,
+      w: item.w,
       editableEl: schema[item.type as keyof typeof schema].editData,
       category: item.category,
       x: item.x || 0

@@ -13,7 +13,7 @@ interface ColorProps {
 class colorPicker extends React.Component<ColorProps> {
   state = {
     displayColorPicker: false,
-    color: rgba2Obj(this.props.value),
+    color: rgba2Obj(this.props.value)
   };
 
   handleClick = () => {
@@ -40,7 +40,7 @@ class colorPicker extends React.Component<ColorProps> {
             borderRadius: '1px',
             boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
             display: 'inline-block',
-            cursor: 'pointer',
+            cursor: 'pointer'
           }}
           onClick={this.handleClick}
         >
@@ -49,7 +49,7 @@ class colorPicker extends React.Component<ColorProps> {
               width: '20px',
               height: '20px',
               borderRadius: '2px',
-              background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
+              background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
             }}
           />
         </div>
@@ -58,7 +58,7 @@ class colorPicker extends React.Component<ColorProps> {
             <div
               style={{
                 position: 'absolute',
-                zIndex: 2000,
+                zIndex: 2000
               }}
             >
               <SketchPicker color={this.state.color} onChange={this.handleChange} />
@@ -70,7 +70,7 @@ class colorPicker extends React.Component<ColorProps> {
                 right: '0px',
                 bottom: '0px',
                 left: '0px',
-                zIndex: 1000,
+                zIndex: 1000
               }}
               onClick={this.handleClose}
             />

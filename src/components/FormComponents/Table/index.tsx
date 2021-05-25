@@ -83,18 +83,18 @@ const EditableCell: React.FC<EditableCellProps> = ({
         rules={[
           {
             required: true,
-            message: `${title} 是必填的.`,
-          },
+            message: `${title} 是必填的.`
+          }
         ]}
       >
         <Input
-          ref={(inputRef as unknown) as () => RefObject<HTMLInputElement>}
+          ref={inputRef as unknown as () => RefObject<HTMLInputElement>}
           onPressEnter={save}
           onBlur={save}
         />
       </Form.Item>
     ) : (
-      <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+      <div className='editable-cell-value-wrap' style={{ paddingRight: 24 }} onClick={toggleEdit}>
         {children}
       </div>
     );
@@ -127,30 +127,30 @@ class EditableTable extends React.Component<any, any> {
         title: '名字',
         dataIndex: 'name',
         width: '180px',
-        editable: true,
+        editable: true
       },
       {
         title: '值',
         dataIndex: 'value',
         width: '120px',
-        editable: true,
+        editable: true
       },
       {
         title: '操作',
         dataIndex: 'operation',
         render: (text: string, record) =>
           this.state.dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <Button type="link">删除</Button>
+            <Popconfirm title='Sure to delete?' onConfirm={() => this.handleDelete(record.key)}>
+              <Button type='link'>删除</Button>
             </Popconfirm>
-          ) : null,
-      },
+          ) : null
+      }
     ];
 
     this.apiForm = {
       api: '',
       header: '',
-      dataField: '',
+      dataField: ''
     };
 
     const dataSource =
@@ -160,13 +160,13 @@ class EditableTable extends React.Component<any, any> {
       dataSource: dataSource,
       visible: false,
       apiVisible: false,
-      apiResult: '',
+      apiResult: ''
     };
   }
 
   handleDelete = (key: string) => {
     const dataSource = [...this.state.dataSource];
-    const newDataSource = dataSource.filter(item => item.key !== key);
+    const newDataSource = dataSource.filter((item) => item.key !== key);
     this.setState({ dataSource: newDataSource });
     this.props.onChange && this.props.onChange(newDataSource);
   };
@@ -177,22 +177,22 @@ class EditableTable extends React.Component<any, any> {
     const newData = {
       key: uid,
       name: `dooring ${dataSource.length + 1}`,
-      value: 32,
+      value: 32
     };
     const newDataSource = [...dataSource, newData];
     this.setState({
-      dataSource: newDataSource,
+      dataSource: newDataSource
     });
     this.props.onChange && this.props.onChange(newDataSource);
   };
 
   handleSave = (row: any) => {
     const newData = [...this.state.dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
+    const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, {
       ...item,
-      ...row,
+      ...row
     });
     this.setState({ dataSource: newData });
     this.props.onChange && this.props.onChange(newData);
@@ -200,25 +200,25 @@ class EditableTable extends React.Component<any, any> {
 
   showModal = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
   handleOk = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
   handleCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
   showApiModal = () => {
     this.setState({
-      apiVisible: true,
+      apiVisible: true
     });
   };
 
@@ -229,19 +229,19 @@ class EditableTable extends React.Component<any, any> {
       if (data && data instanceof Array) {
         data = data.map((item, i) => ({ key: i + '', ...item }));
         this.setState({
-          dataSource: data,
+          dataSource: data
         });
         this.props.onChange && this.props.onChange(data);
       }
       this.setState({
-        apiVisible: false,
+        apiVisible: false
       });
     }
   };
 
   handleAPICancel = () => {
     this.setState({
-      apiVisible: false,
+      apiVisible: false
     });
   };
 
@@ -256,15 +256,15 @@ class EditableTable extends React.Component<any, any> {
       cache: 'no-cache',
       headers: Object.assign(
         { 'content-type': 'application/json' },
-        header ? JSON.parse(header) : {},
+        header ? JSON.parse(header) : {}
       ),
       method: 'GET',
-      mode: 'cors',
+      mode: 'cors'
     })
-      .then(res => res.json())
-      .then(res => {
+      .then((res) => res.json())
+      .then((res) => {
         this.setState({
-          apiResult: res,
+          apiResult: res
         });
       });
   };
@@ -274,22 +274,22 @@ class EditableTable extends React.Component<any, any> {
     const components = {
       body: {
         row: EditableRow,
-        cell: EditableCell,
-      },
+        cell: EditableCell
+      }
     };
-    const columns: ColumnsType<any> = this.columns.map(col => {
+    const columns: ColumnsType<any> = this.columns.map((col) => {
       if (!col.editable) {
         return col;
       }
       return {
         ...col,
-        onCell: record => ({
+        onCell: (record) => ({
           record,
           editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
-          handleSave: this.handleSave,
-        }),
+          handleSave: this.handleSave
+        })
       };
     });
     const _this = this;
@@ -300,12 +300,12 @@ class EditableTable extends React.Component<any, any> {
       beforeUpload(file: File, fileList: Array<File>) {
         // 解析并提取excel数据
         let reader = new FileReader();
-        reader.onload = function(e: any) {
+        reader.onload = function (e: any) {
           let data = e.target.result;
           let workbook = XLSX.read(data, { type: 'binary' });
           let sheetNames = workbook.SheetNames; // 工作表名称集合
           let draftArr: any = {};
-          sheetNames.forEach(name => {
+          sheetNames.forEach((name) => {
             let worksheet = workbook.Sheets[name]; // 只能通过工作表名称来获取指定工作表
             for (let key in worksheet) {
               // v是读取单元格的原始值
@@ -321,42 +321,42 @@ class EditableTable extends React.Component<any, any> {
           let sourceData = Object.values(draftArr).map((item: any, i) => ({
             key: i + '',
             name: item[0],
-            value: item[1],
+            value: item[1]
           }));
           _this.setState({
-            dataSource: sourceData,
+            dataSource: sourceData
           });
           _this.props.onChange && _this.props.onChange(sourceData);
         };
         reader.readAsBinaryString(file);
-      },
+      }
     };
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type='primary' onClick={this.showModal}>
           编辑数据源
         </Button>
         <Modal
-          title="编辑数据源"
+          title='编辑数据源'
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          okText="确定"
-          cancelText="取消"
+          okText='确定'
+          cancelText='取消'
         >
           <Button
             onClick={this.handleAdd}
-            type="primary"
+            type='primary'
             style={{ marginBottom: 16, marginRight: 16 }}
           >
             添加行
           </Button>
           <Upload {...props}>
-            <Button type="primary" ghost style={{ marginRight: 16 }}>
+            <Button type='primary' ghost style={{ marginRight: 16 }}>
               导入Excel
             </Button>
           </Upload>
-          <Button type="primary" ghost onClick={this.showApiModal}>
+          <Button type='primary' ghost onClick={this.showApiModal}>
             第三方API
           </Button>
           <Table
@@ -370,29 +370,29 @@ class EditableTable extends React.Component<any, any> {
           />
         </Modal>
         <Modal
-          title="配置api"
+          title='配置api'
           visible={this.state.apiVisible}
           onOk={this.handleAPIOk}
           onCancel={this.handleAPICancel}
-          okText="确定"
-          cancelText="取消"
+          okText='确定'
+          cancelText='取消'
         >
           <div className={styles.apiForm}>
             <div className={styles.formItem}>
               <Input
-                placeholder="请输入api地址"
-                onChange={e => this.handleApiField('api', e.target.value)}
+                placeholder='请输入api地址'
+                onChange={(e) => this.handleApiField('api', e.target.value)}
               />
             </div>
             <div className={styles.formItem}>
               <Input.TextArea
-                placeholder="请输入头信息, 如{token: 123456}, 格式必须为json对象"
+                placeholder='请输入头信息, 如{token: 123456}, 格式必须为json对象'
                 rows={4}
-                onChange={e => this.handleApiField('header', e.target.value)}
+                onChange={(e) => this.handleApiField('header', e.target.value)}
               />
             </div>
             <div className={styles.formItem}>
-              <Button type="primary" onClick={this.getApiFn}>
+              <Button type='primary' onClick={this.getApiFn}>
                 发送请求
               </Button>
             </div>
@@ -403,8 +403,8 @@ class EditableTable extends React.Component<any, any> {
                 </div>
                 <div className={styles.formItem}>
                   <Input
-                    placeholder="设置数据源字段"
-                    onChange={e => this.handleApiField('dataField', e.target.value)}
+                    placeholder='设置数据源字段'
+                    onChange={(e) => this.handleApiField('dataField', e.target.value)}
                   />
                   <p style={{ color: 'red' }}>
                     数据源字段是接口返回的图表数据对应的字段, 必填, 否则无法正确导入数据

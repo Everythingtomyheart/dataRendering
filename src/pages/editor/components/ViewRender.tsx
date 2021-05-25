@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import type { ItemCallback } from 'react-grid-layout';
-import GridLayout from 'react-grid-layout';
 import DynamicEngine from '@/components/DynamicEngine';
 import styled from 'styled-components';
+import type { DraggableData } from 'react-draggable';
+import Draggable from 'react-draggable';
 
 interface PointDataItem {
   id: string;
@@ -10,17 +10,15 @@ interface PointDataItem {
   point: Record<string, any>;
 }
 
-interface ViewProps {
+export interface ViewProps {
   pointData: PointDataItem[];
   pageData?: any;
   width?: number;
-  dragStop?: ItemCallback;
-  onDragStart?: ItemCallback;
-  onResizeStop?: ItemCallback;
+  height?: number;
+  dragStop?: (oldItem: PointDataItem, data: DraggableData) => void;
 }
 const DragItem = styled.div`
   position: absolute;
-  z-index: 2;
   display: inline-block;
   border: 2px solid transparent;
   cursor: move;
@@ -33,19 +31,12 @@ const DragItem = styled.div`
   }
 `;
 const ViewRender = memo((props: ViewProps) => {
-  const { pointData, pageData, width, dragStop, onDragStart, onResizeStop } = props;
-
+  const { pointData, pageData, width, height, dragStop } = props;
   return (
-    <GridLayout
-      cols={24}
-      rowHeight={2}
-      width={width}
-      margin={[0, 0]}
-      onDragStop={dragStop}
-      onDragStart={onDragStart}
-      onResizeStop={onResizeStop}
+    <div
       style={{
-        minHeight: '100vh',
+        width,
+        height,
         backgroundColor: pageData && pageData.bgColor,
         backgroundImage:
           pageData && pageData.bgImage ? `url(${pageData.bgImage[0].url}) ` : 'initial',
@@ -54,11 +45,18 @@ const ViewRender = memo((props: ViewProps) => {
       }}
     >
       {pointData.map((value: PointDataItem) => (
-        <DragItem key={value.id} data-grid={value.point}>
-          <DynamicEngine {...(value.item as any)} isTpl={false} />
-        </DragItem>
+        <Draggable
+          onStop={(e, data) => {
+            dragStop && dragStop(value, data);
+          }}
+          defaultPosition={{ x: value.point.x, y: value.point.y }}
+        >
+          <DragItem draggable='true' key={value.id} id={value.id}>
+            <DynamicEngine {...(value.item as any)} isTpl={false} />
+          </DragItem>
+        </Draggable>
       ))}
-    </GridLayout>
+    </div>
   );
 });
 

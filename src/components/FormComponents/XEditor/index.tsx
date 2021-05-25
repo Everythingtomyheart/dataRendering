@@ -7,7 +7,7 @@ import styles from './index.less';
 const controls = [
   {
     key: 'bold',
-    text: <b>加粗</b>,
+    text: <b>加粗</b>
   },
   'undo',
   'redo',
@@ -23,7 +23,7 @@ const controls = [
   'italic',
   'underline',
   'link',
-  'media',
+  'media'
 ];
 
 export default memo(function XEditor(props: any) {
@@ -37,13 +37,13 @@ export default memo(function XEditor(props: any) {
     req
       .post('xxxx', fd, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress: function(event) {
+        onUploadProgress: function (event) {
           // 上传进度发生变化时调用param.progress
           console.log((event.loaded / event.total) * 100);
           param.progress((event.loaded / event.total) * 100);
-        },
+        }
       })
       .then((res: any) => {
         // 上传成功后调用param.success并传入上传后的文件地址
@@ -52,13 +52,13 @@ export default memo(function XEditor(props: any) {
           meta: {
             id: Date.now(),
             title: res.filename,
-            alt: '趣谈前端',
-          },
+            alt: '趣谈前端'
+          }
         });
       })
-      .catch(err => {
+      .catch((err) => {
         param.error({
-          msg: '上传失败.',
+          msg: '上传失败.'
         });
       });
   };
@@ -68,7 +68,7 @@ export default memo(function XEditor(props: any) {
     onChange && onChange(htmlContent);
   };
 
-  const handleEditorChange = editorState => {
+  const handleEditorChange = (editorState) => {
     setEditorState(editorState);
     if (onChange) {
       const htmlContent = editorState.toHTML();

@@ -12,7 +12,7 @@ import {
   DragSourceConnector,
   DropTargetSpec,
   ConnectDragSource,
-  ConnectDragPreview,
+  ConnectDragPreview
 } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import EditorModal from './editorModal';
@@ -37,7 +37,7 @@ function ListItem(props: ListItemProps) {
     isDragging,
     connectDragSource,
     connectDragPreview,
-    connectDropTarget,
+    connectDropTarget
   } = props;
   const opacity = isDragging ? 0.5 : 1;
   return connectDropTarget(
@@ -54,15 +54,16 @@ function ListItem(props: ListItemProps) {
           <span className={styles.action} onClick={() => onDel()}>
             <MinusCircleOutlined />
           </span>
-          {connectDragSource(
-            <span className={styles.action}>
-              <MenuOutlined />
-            </span>,
-          ) // 拖动图标作为 Drag 对象
+          {
+            connectDragSource(
+              <span className={styles.action}>
+                <MenuOutlined />
+              </span>
+            ) // 拖动图标作为 Drag 对象
           }
         </div>
-      </div>,
-    ),
+      </div>
+    )
   );
 }
 
@@ -82,9 +83,9 @@ type DragObject = {
 };
 const dragSpec: DragSourceSpec<DndItemProps, DragObject> = {
   // 拖动开始时，返回描述 source 数据。后续通过 monitor.getItem() 获得
-  beginDrag: props => ({
+  beginDrag: (props) => ({
     id: props.id,
-    originalIndex: props.find(props.id).index,
+    originalIndex: props.find(props.id).index
   }),
   // 拖动停止时，处理 source 数据
   endDrag(props, monitor) {
@@ -94,13 +95,13 @@ const dragSpec: DragSourceSpec<DndItemProps, DragObject> = {
     if (!didDrop) {
       return props.move(droppedId, originalIndex);
     }
-  },
+  }
 };
 
 const dragCollect = (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
   connectDragSource: connect.dragSource(), // 用于包装需要拖动的组件
   connectDragPreview: connect.dragPreview(), // 用于包装需要拖动跟随预览的组件
-  isDragging: monitor.isDragging(), // 用于判断是否处于拖动状态
+  isDragging: monitor.isDragging() // 用于判断是否处于拖动状态
 });
 
 const dropSpec: DropTargetSpec<DndItemProps> = {
@@ -113,17 +114,17 @@ const dropSpec: DropTargetSpec<DndItemProps> = {
       const { index: overIndex } = props.find(overId);
       props.move(draggedId, overIndex);
     }
-  },
+  }
 };
 
 const dropCollect = (connect: DropTargetConnector) => ({
-  connectDropTarget: connect.dropTarget(), // 用于包装需接收拖拽的组件
+  connectDropTarget: connect.dropTarget() // 用于包装需接收拖拽的组件
 });
 
 const DndItem = DropTarget(
   type,
   dropSpec,
-  dropCollect,
+  dropCollect
 )(DragSource(type, dragSpec, dragCollect)(ListItem));
 
 export type DataListMemo = {
@@ -136,7 +137,7 @@ export type DataListType = DataListMemo & {
   connectDropTarget: ConnectDropTarget;
 };
 
-const List = function(props: DataListType) {
+const List = function (props: DataListType) {
   const { onChange, value, connectDropTarget, cropRate } = props;
   const [list, setList] = useState(value);
   const [visible, setVisible] = useState(false);
@@ -144,16 +145,16 @@ const List = function(props: DataListType) {
 
   const handleDel = (id: string) => {
     if (value && onChange) {
-      let newVal = value.filter(item => id !== item.id);
+      let newVal = value.filter((item) => id !== item.id);
       onChange(newVal);
     }
   };
 
   const find = (id: string) => {
-    const item = list!.find(c => `${c.id}` === id)!;
+    const item = list!.find((c) => `${c.id}` === id)!;
     return {
       item,
-      index: list!.indexOf(item!),
+      index: list!.indexOf(item!)
     };
   };
 
@@ -185,12 +186,12 @@ const List = function(props: DataListType) {
       console.log('c');
       setVisible(false);
       if (onChange) {
-        onChange(list!.map(p => (p.id === item.id ? item : p)));
+        onChange(list!.map((p) => (p.id === item.id ? item : p)));
         return;
       }
-      setList(prev => prev!.map(p => (p.id === item.id ? item : p)));
+      setList((prev) => prev!.map((p) => (p.id === item.id ? item : p)));
     },
-    [list, onChange],
+    [list, onChange]
   );
 
   const handleAdd = () => {
@@ -199,7 +200,7 @@ const List = function(props: DataListType) {
       desc: '新增项描述',
       id: uuid(8, 10),
       imgUrl: [],
-      link: '',
+      link: ''
     };
     if (onChange) {
       onChange([...list!, item]);
@@ -238,12 +239,12 @@ const List = function(props: DataListType) {
         onSave={handleSave}
         cropRate={cropRate}
       />
-    </div>,
+    </div>
   );
 };
 
-const DndList = DropTarget(type, {}, connect => ({
-  connectDropTarget: connect.dropTarget(),
+const DndList = DropTarget(type, {}, (connect) => ({
+  connectDropTarget: connect.dropTarget()
 }))(List);
 
 // 将 HTMLBackend 作为参数传给 DragDropContext

@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import Draggable from 'react-draggable';
-import type { ItemCallback } from 'react-grid-layout';
+import type { ItemCallback, ViewProps } from './ViewRender';
 import ViewRender from './ViewRender';
 import { getuuid } from '@/utils';
 import { Menu, Item, MenuProvider } from 'react-contexify';
@@ -61,22 +61,25 @@ const TargetBox = memo((props: TargetBoxProps) => {
   const [isShowTip, setIsShowTip] = useState(true);
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: allType,
-    drop: (item: { h: number; type: string; x: number }, monitor) => {
-      console.log(item, monitor);
+    drop: (item: { w: number; h: number; type: string; x: number }, monitor) => {
       const parentDiv = document.getElementById(canvasId);
       const pointRect = parentDiv!.getBoundingClientRect();
       const { top } = pointRect;
       const pointEnd = monitor.getSourceClientOffset();
       const y = pointEnd!.y < top ? 0 : pointEnd!.y - top;
-      const col = 24; // 网格列数
       const cellHeight = 2;
-      const w = item.type === 'Icon' ? 3 : col;
       // 转换成网格规则的坐标和大小
       const gridY = Math.ceil(y / cellHeight);
       editorModel.addPointData({
         id: getuuid(),
         item,
-        point: { i: `x-${pointData.length}`, x: 0, y: gridY, w, h: item.h, isBounded: true },
+        point: {
+          x: 0,
+          y: gridY,
+          w: item.w,
+          h: item.h,
+          isBounded: true
+        },
         status: 'inToCanvas'
       });
     },
@@ -87,26 +90,36 @@ const TargetBox = memo((props: TargetBoxProps) => {
     })
   });
 
-  const dragStop: ItemCallback = useMemo(() => {
-    return (layout, oldItem, newItem) => {
-      const curPointData = pointData.filter((item) => item.id === newItem.i)[0];
-      editorModel.modPointData({ ...curPointData, point: newItem, status: 'inToCanvas' });
+  const dragStop: ViewProps['dragStop'] = useMemo(() => {
+    return (oldItem, e) => {
+      const curPointData = pointData.filter((item) => item.id === oldItem.id)[0];
+      editorModel.modPointData({
+        ...curPointData,
+        point: {
+          x: e.x,
+          y: e.y,
+          w: oldItem.item.w,
+          h: oldItem.item.h,
+          isBounded: true
+        },
+        status: 'inToCanvas'
+      });
     };
   }, [editorModel, pointData]);
 
-  const onDragStart: ItemCallback = useMemo(() => {
-    return (layout, oldItem, newItem) => {
-      const curPointData = pointData.filter((item) => item.id === newItem.i)[0];
-      editorModel.modPointData({ ...curPointData, status: 'inToCanvas' });
-    };
-  }, [editorModel, pointData]);
+  // const onDragStart: ItemCallback = useMemo(() => {
+  //   return (oldItem) => {
+  //     const curPointData = pointData.filter((item) => item.id === oldItem.id)[0];
+  //     editorModel.modPointData({ ...curPointData, status: 'inToCanvas' });
+  //   };
+  // }, [editorModel, pointData]);
 
-  const onResizeStop: ItemCallback = useMemo(() => {
-    return (layout, oldItem, newItem) => {
-      const curPointData = pointData.filter((item) => item.id === newItem.i)[0];
-      editorModel.modPointData({ ...curPointData, point: newItem, status: 'inToCanvas' });
-    };
-  }, [editorModel, pointData]);
+  // const onResizeStop: ItemCallback = useMemo(() => {
+  //   return (layout, oldItem, newItem) => {
+  //     const curPointData = pointData.filter((item) => item.id === newItem.i)[0];
+  //     editorModel.modPointData({ ...curPointData, point: newItem, status: 'inToCanvas' });
+  //   };
+  // }, [editorModel, pointData]);
 
   const handleContextMenuDel = useCallback(() => {
     if (editorModel.state.curPoint) {
@@ -178,9 +191,10 @@ const TargetBox = memo((props: TargetBoxProps) => {
                   <ViewRender
                     pointData={pointData}
                     width={canvasRect[0] || 0}
+                    height={canvasRect[1] || 0}
                     dragStop={dragStop}
-                    onDragStart={onDragStart}
-                    onResizeStop={onResizeStop}
+                    // onDragStart={onDragStart}
+                    // onResizeStop={onResizeStop}
                   />
                 ) : null}
               </div>
@@ -195,8 +209,8 @@ const TargetBox = memo((props: TargetBoxProps) => {
     dragStop,
     drop,
     isShowTip,
-    onDragStart,
-    onResizeStop,
+    // onDragStart,
+    // onResizeStop,
     opacity,
     pointData,
     scaleNum

@@ -1,6 +1,5 @@
 import type SocketIOClient from 'socket.io-client';
 import io from 'socket.io-client';
-import store from '@/store';
 import { getuuid } from '@/utils';
 import { useEffect, useRef } from 'react';
 import useMount from '@/hooks/useMount';
@@ -9,10 +8,10 @@ let socket: SocketIOClient.Socket;
 // 初始化创建socket方法
 function init() {
   try {
-    socket = io('ws://192.168.100.199:18889', {
+    socket = io('ws://localhost', {
       path: '/socket.io/',
       query: {
-        userID: store.user.state.userinfo.User_ID
+        userID: '123'
       },
       transports: ['websocket'],
       timeout: 50000,

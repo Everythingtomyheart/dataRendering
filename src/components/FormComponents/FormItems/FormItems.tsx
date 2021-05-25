@@ -15,19 +15,19 @@ const formTpl: TFormItemsDefaultType = [
     id: '1',
     type: 'Text',
     label: '文本框',
-    placeholder: '请输入文本',
+    placeholder: '请输入文本'
   },
   {
     id: '2',
     type: 'Textarea',
     label: '长文本框',
-    placeholder: '请输入长文本请输入长文本',
+    placeholder: '请输入长文本请输入长文本'
   },
   {
     id: '3',
     type: 'Number',
     label: '数值',
-    placeholder: ' 请输入数值',
+    placeholder: ' 请输入数值'
   },
   {
     id: '4',
@@ -35,8 +35,8 @@ const formTpl: TFormItemsDefaultType = [
     label: '单选框',
     options: [
       { label: '选项一', value: '1' },
-      { label: '选项二', value: '2' },
-    ],
+      { label: '选项二', value: '2' }
+    ]
   },
   {
     id: '5',
@@ -45,22 +45,22 @@ const formTpl: TFormItemsDefaultType = [
     options: [
       { label: '选项一', value: '1' },
       { label: '选项二', value: '2' },
-      { label: '选项三', value: '3' },
-    ],
+      { label: '选项三', value: '3' }
+    ]
   },
   {
     id: '6',
     type: 'Date',
     label: '日期框',
-    placeholder: '',
+    placeholder: ''
   },
   {
     id: '7',
     type: 'MyTextTip',
     label: '纯文本',
     fontSize: 12,
-    color: 'rgba(0,0,0,1)',
-  },
+    color: 'rgba(0,0,0,1)'
+  }
 ];
 
 interface FormItemsProps {
@@ -76,11 +76,11 @@ const FormItems = (props: FormItemsProps) => {
   const [visible, setVisible] = useState(false);
   const [curItem, setCurItem] = useState<baseFormUnion>();
   const [force, setforce] = useState<{ force: Function }>({
-    force: () => {},
+    force: () => {}
   });
 
   const handleAddItem = (item: baseFormUnion) => {
-    let tpl = formTpl.find(v => v.type === item.type);
+    let tpl = formTpl.find((v) => v.type === item.type);
     let newData = [...formData, { ...tpl!, id: uuid(6, 10) }];
     setFormData(newData);
     onChange && onChange(newData);
@@ -93,13 +93,13 @@ const FormItems = (props: FormItemsProps) => {
   };
 
   const handleDelItem = (item: baseFormUnion) => {
-    let newData = formData.filter(v => v.id !== item.id);
+    let newData = formData.filter((v) => v.id !== item.id);
     setFormData(newData);
     onChange && onChange(newData);
   };
 
   const handleSaveItem = (data: baseFormUnion) => {
-    let newData = formData.map(v => (v.id === data.id ? data : v));
+    let newData = formData.map((v) => (v.id === data.id ? data : v));
     setFormData(newData);
     onChange && onChange(newData);
     setVisible(false);
@@ -165,7 +165,7 @@ const FormItems = (props: FormItemsProps) => {
                             display: 'flex',
                             flexDirection: 'column',
                             overflow: 'row',
-                            marginTop: '10px',
+                            marginTop: '10px'
                           }}
                         >
                           <FormItem {...item} />

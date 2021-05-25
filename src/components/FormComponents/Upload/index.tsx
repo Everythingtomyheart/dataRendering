@@ -14,7 +14,7 @@ const { TabPane } = Tabs;
 const wallCateName: any = {
   photo: '照片',
   bg: '背景',
-  chahua: '插画',
+  chahua: '插画'
 };
 
 function getBase64(file: File | Blob) {
@@ -22,7 +22,7 @@ function getBase64(file: File | Blob) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 }
 
@@ -46,10 +46,10 @@ class PicturesWall extends React.Component<PicturesWallType> {
     imgBed: {
       photo: [],
       bg: [],
-      chahua: [],
+      chahua: []
     },
     curSelectedImg: '',
-    fileList: this.props.fileList || [],
+    fileList: this.props.fileList || []
   };
 
   handleCancel = () => this.setState({ previewVisible: false });
@@ -64,25 +64,25 @@ class PicturesWall extends React.Component<PicturesWallType> {
     this.setState({
       previewImage: file.url || file.preview,
       previewVisible: true,
-      previewTitle: file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1),
+      previewTitle: file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1)
     });
   };
 
   handleWallSelect = (url: string) => {
     this.setState({
-      wallModalVisible: true,
+      wallModalVisible: true
     });
   };
 
   handleImgSelected = (url: string) => {
     this.setState({
-      curSelectedImg: url,
+      curSelectedImg: url
     });
   };
 
   handleWallShow = () => {
     this.setState({
-      wallModalVisible: true,
+      wallModalVisible: true
     });
   };
 
@@ -92,8 +92,8 @@ class PicturesWall extends React.Component<PicturesWallType> {
         uid: uuid(8, 16),
         name: 'h5-dooring图片库',
         status: 'done',
-        url: this.state.curSelectedImg,
-      },
+        url: this.state.curSelectedImg
+      }
     ];
     this.props.onChange && this.props.onChange(fileList);
     this.setState({ fileList, wallModalVisible: false });
@@ -102,7 +102,7 @@ class PicturesWall extends React.Component<PicturesWallType> {
   handleChange = ({ file, fileList }: UploadChangeParam<UploadFile<any>>) => {
     this.setState({ fileList });
     if (file.status === 'done') {
-      const files = fileList.map(item => {
+      const files = fileList.map((item) => {
         const { uid, name, status } = item;
         const url = item.url || item.response.result.url;
         return { uid, name, status, url };
@@ -144,7 +144,7 @@ class PicturesWall extends React.Component<PicturesWallType> {
       previewTitle,
       wallModalVisible,
       imgBed,
-      curSelectedImg,
+      curSelectedImg
     } = this.state;
     const {
       action = isDev ? 'http://192.168.1.8:3000/api/v0/files/upload/free' : '你的服务器地址',
@@ -152,13 +152,13 @@ class PicturesWall extends React.Component<PicturesWallType> {
       withCredentials = true,
       maxLen = 1,
       cropRate = 375 / 158,
-      isCrop,
+      isCrop
     } = this.props;
 
     const uploadButton = (
       <div>
         <PlusOutlined />
-        <div className="ant-upload-text">上传</div>
+        <div className='ant-upload-text'>上传</div>
       </div>
     );
 
@@ -168,9 +168,9 @@ class PicturesWall extends React.Component<PicturesWallType> {
       <>
         {isCrop ? (
           <ImgCrop
-            modalTitle="裁剪图片"
-            modalOk="确定"
-            modalCancel="取消"
+            modalTitle='裁剪图片'
+            modalOk='确定'
+            modalCancel='取消'
             rotate={true}
             aspect={cropRate}
           >
@@ -178,15 +178,15 @@ class PicturesWall extends React.Component<PicturesWallType> {
               fileList={fileList}
               onPreview={this.handlePreview}
               onChange={this.handleChange}
-              name="file"
-              listType="picture-card"
+              name='file'
+              listType='picture-card'
               className={styles.avatarUploader}
               action={action}
               withCredentials={withCredentials}
               headers={{
                 'x-requested-with': localStorage.getItem('user') || '',
                 authorization: localStorage.getItem('token') || '',
-                ...headers,
+                ...headers
               }}
               beforeUpload={this.handleBeforeUpload}
             >
@@ -198,15 +198,15 @@ class PicturesWall extends React.Component<PicturesWallType> {
             fileList={fileList}
             onPreview={this.handlePreview}
             onChange={this.handleChange}
-            name="file"
-            listType="picture-card"
+            name='file'
+            listType='picture-card'
             className={styles.avatarUploader}
             action={action}
             withCredentials={withCredentials}
             headers={{
               'x-requested-with': localStorage.getItem('user') || '',
               authorization: localStorage.getItem('token') || '',
-              ...headers,
+              ...headers
             }}
             beforeUpload={this.handleBeforeUpload}
           >
@@ -222,18 +222,18 @@ class PicturesWall extends React.Component<PicturesWallType> {
           footer={null}
           onCancel={this.handleCancel}
         >
-          <img alt="预览图片" style={{ width: '100%' }} src={previewImage} />
+          <img alt='预览图片' style={{ width: '100%' }} src={previewImage} />
         </Modal>
         <Modal
           visible={wallModalVisible}
-          title="图片库"
-          okText="确定"
-          cancelText="取消"
+          title='图片库'
+          okText='确定'
+          cancelText='取消'
           width={860}
           onCancel={this.handleModalCancel}
           onOk={this.handleModalOk}
         >
-          <Tabs defaultActiveKey={cates[0]} tabPosition="left" style={{ height: 520 }}>
+          <Tabs defaultActiveKey={cates[0]} tabPosition='left' style={{ height: 520 }}>
             {cates.map((item, i) => {
               return (
                 <TabPane tab={wallCateName[item]} key={item}>
@@ -244,12 +244,12 @@ class PicturesWall extends React.Component<PicturesWallType> {
                           <div
                             className={classnames(
                               styles.imgItem,
-                              curSelectedImg === item ? styles.seleted : '',
+                              curSelectedImg === item ? styles.seleted : ''
                             )}
                             key={i}
                             onClick={() => this.handleImgSelected(item)}
                           >
-                            <img src={item} alt="趣谈前端-h5-dooring" />
+                            <img src={item} alt='趣谈前端-h5-dooring' />
                             <span className={styles.iconBtn}>
                               <CheckCircleFilled />
                             </span>
@@ -260,8 +260,8 @@ class PicturesWall extends React.Component<PicturesWallType> {
                 </TabPane>
               );
             })}
-            <TabPane tab="更多" key="more">
-              <Result status="500" title="Dooring温馨提示" subTitle="更多素材, 正在筹备中..." />
+            <TabPane tab='更多' key='more'>
+              <Result status='500' title='Dooring温馨提示' subTitle='更多素材, 正在筹备中...' />
             </TabPane>
           </Tabs>
         </Modal>
