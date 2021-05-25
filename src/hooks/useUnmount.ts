@@ -9,7 +9,7 @@ const useUnmount = (fn: () => void) => {
 
   useEffect(
     () => () => {
-      if (isFunction(fnPersist)) {
+      if (isFunction(fnPersist.current)) {
         fnPersist.current();
       }
     },
